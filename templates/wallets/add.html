@@ -1,0 +1,43 @@
+{% extends 'wrapper.html' %}
+{% block content %}
+{% load static %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-2">New Wallet</legend>
+                <div class="d-flex mx-5 flex-raw">
+                    <div class="fieldWrapper mb-4 mx-5">
+                        <div>{{ form.wallet_address.label_tag }}</div>
+                        <div>{{ form.wallet_address }}</div>
+                        {% if form.wallet_address.errors %}
+                        {% for error in form.wallet_address.errors%}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="fieldWrapper mb-4 mx-5 flex-column">
+                        <div>{{ form.blockchains.label_tag }}</div>
+                        {% for chain in form.blockchains.field.choices.queryset %}
+                        <div class="d-flex">
+                            <label for="id_blockchains_{{chain.id}}">
+                                <input type="checkbox" name="blockchains" value="{{chain.id}}" id="id_blockchains_{{chain.id}}">
+                                {{chain.name}}
+                            </label>
+                            <img src="{% static 'icons/'%}{{chain.title}}.png" alt="{{chain.title}}" style="width: 1.5em">
+                        </div>
+                        {% endfor %}
+                        {% if form.blockchains.errors %}
+                        {% for error in form.blockchains.errors%}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

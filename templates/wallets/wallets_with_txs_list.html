@@ -1,0 +1,43 @@
+{% extends 'wrapper.html' %}
+{% block content %}
+
+{% load static %}
+<div>
+    {% for wallet in all_txs%}
+            <button class="accordion">
+                {{ wallet.wallet }}
+            </button>
+            <div class="d-flex flex-column panel">
+                {% for chain, txs in wallet.txs.items %}
+                <div class="d-flex flex-column">
+                    <div class="tab">
+                        <button class="tablinks" onclick="openTab(event, '{{wallet.wallet}}-{{ chain.title }}')">{{ chain }}</button>
+                    </div>
+                    <div id="{{wallet.wallet}}-{{ chain.title }}" class="d-flex flex-column bg-white border rounded tabcontent">
+                        <div role="row" class="d-flex flex-row py-4 px-3 border-bottom justify-content-between">
+                            <div role="cell" class="d-flex">Hash</div>
+                            <div role="cell" class="d-flex">From</div>
+                            <div role="cell" class="d-flex">To</div>
+                            <div role="cell" class="d-flex">Token</div>
+                            <div role="cell" class="d-flex">Value</div>
+                        </div>
+                        {% for tx in txs %}
+                            <div role="row" class="d-flex flex-row py-4 px-3 border-bottom justify-content-between">
+                                <div role="cell" class="d-flex">{{ tx.hash|truncatechars:10 }}</div>
+                                <div role="cell" class="d-flex">{{ tx.tx_from|truncatechars:10 }}</div>
+                                <div role="cell" class="d-flex">{{ tx.tx_to|truncatechars:10 }}</div>
+                                <div role="cell" class="d-flex">{{ tx.token_symbol }}</div>
+                                <div role="cell" class="d-flex">{{ tx.value }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript" src="{% static 'js/accordion.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/tabs.js' %}"></script>
+
+{% endblock %}

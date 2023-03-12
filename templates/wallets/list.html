@@ -1,0 +1,43 @@
+{% extends 'wrapper.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="d-flex align-items-center justify-content-sm-center flex-column">
+  <div class="d-inline-flex flex-column" style="width: 50em">
+    <div id="wallets-table" class="d-flex flex-column bg-white border rounded">
+
+    {% for wallet in wallets %}
+      <div role="row" class="d-flex flex-row py-4 px-3 border-bottom justify-content-between">
+        <div role="cell" class="d-flex">{{wallet}}</div>
+        <div role="cell" class="d-flex justify-content-between mx-3">
+          {% for chain in wallet.blockchains.all %}
+          <div class="d-flex mx-3">
+            <img src="{% static 'icons/'%}{{chain.title}}.png" alt="{{chain.title}}" style="width: 1.5em">
+          </div>
+          {% endfor %}
+        </div>
+        <div role="cell" class="d-flex justify-content-end">
+          <a href="{% url 'wallet_remove' wallet.wallet_address%}">
+            <img src="{% static 'icons/cross.png '%}" alt="Remove" style="width: 1.5em">
+          </a>
+        </div>
+      </div>
+
+      {% empty %}
+
+      <h2 class="py-3">Seem's like you didn't add any wallets yet!</h2>
+
+    {% endfor %}
+    </div>
+  </div>
+
+  <div class="d-inline-flex mt-3">
+    <a class="btn btn-outline-dark border-2 px-4" href="{% url 'wallet_add' %}" style="font-size: 1.1em">
+      Add Wallet
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}

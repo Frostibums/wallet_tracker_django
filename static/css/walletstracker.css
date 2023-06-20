@@ -12,10 +12,10 @@
 }
 
 .panel {
-  display: none;
   overflow: hidden;
+  display: none;
   transition: max-height 0.2s ease-out;
-  max-height: 100%;
+  flex-direction: column;
 }
 
 .tab {
@@ -32,5 +32,9 @@
 }
 
 .tabcontent {
-  display: none !important;
+  display: none;
+}
+
+.tablink active {
+  display: flex;
 }

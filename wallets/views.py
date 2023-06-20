@@ -24,10 +24,8 @@ def wallets_with_txs_list(request):
 def add_wallet(request):
     if request.method == 'POST':
         wallet_add_form = WalletAddForm(request.POST)
-        print(f'\n\n\n{request.POST}\n\n\n')
         if all([wallet_add_form.is_valid(),
-                wallet_add_form.has_no_duplicates(),
-                wallet_add_form.exists(),
+                wallet_add_form.validate(),
                 ]):
             new_wallet = wallet_add_form.save(commit=False)
             new_wallet.owner = request.user
@@ -35,6 +33,7 @@ def add_wallet(request):
             blockchain = request.POST.getlist('blockchains')
             new_wallet.blockchains.add(*blockchain)
             messages.success(request, f'Добавлен кошелек {new_wallet}!')
+            update_wallet_txs(new_wallet)
             return redirect('wallets_list')
     else:
         wallet_add_form = WalletAddForm()

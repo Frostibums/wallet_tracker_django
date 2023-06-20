@@ -13,8 +13,11 @@ def get_wallet_blockchains(wallet):
 
 
 def get_wallet(wallet_address):
-    wallet = get_object_or_404(Wallet, wallet_address=wallet_address)
-    return wallet
+    try:
+        wallet = get_object_or_404(Wallet, wallet_address=wallet_address)
+        return wallet
+    except Http404:
+        return False
 
 
 def get_user_wallets(user):
@@ -38,19 +41,13 @@ def get_wallet_owner(wallet_address):
 
 def update_wallet_txs(wallet, amount=10):
     wallet_txs = {}
-    # for blockchain in get_wallet_blockchains(wallet):
-    #     if blockchain.title == 'bsc':
-    #         start_block = get_last_block(wallet, blockchain)
-    #         wallet_txs['bsc'] = get_bsc_txs(wallet, amount, start_block)
-    #         if wallet_txs['bsc']:
-    #             for tx in wallet_txs.get('bsc'):
-    #                 add_tx_to_wallet(wallet, tx, blockchain)
     for blockchain in get_wallet_blockchains(wallet):
         start_block = get_last_block(wallet, blockchain)
         wallet_txs[blockchain] = get_new_txs(wallet, blockchain, amount, start_block)
         if wallet_txs.get(blockchain, False):
             for tx in wallet_txs.get(blockchain):
-                add_tx_to_wallet(wallet, tx, blockchain)
+                if int(tx.get('value')):
+                    add_tx_to_wallet(wallet, tx, blockchain)
 
 
 def get_last_block(wallet, blockchain):
@@ -70,7 +67,7 @@ def add_tx_to_wallet(wallet, tx, blockchain):
         tx_to=tx.get('to'),
         token_name=tx.get('tokenName', ''),
         token_symbol=tx.get('tokenSymbol', blockchain),
-        value=tx.get('value'),
+        value=str(round(int(tx.get('value')) / 10 ** 18, 2)),
         time_stamp=datetime.fromtimestamp(int(tx.get('timeStamp')))
     )
     return created

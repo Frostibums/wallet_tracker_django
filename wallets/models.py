@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 class Blockchain(models.Model):
     title = models.CharField(
@@ -11,6 +12,7 @@ class Blockchain(models.Model):
         'Full blockchain name',
         max_length=50,
     )
+
     def __str__(self):
         return self.title
 
@@ -71,9 +73,7 @@ class Transaction(models.Model):
         max_length=20,
     )
     time_stamp = models.DateTimeField()
-    add_time = models.DateTimeField(auto_now_add = True)
-
+    add_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.hash
-

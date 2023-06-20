@@ -22,8 +22,8 @@ For now this file is gonna be a <strong>TODO</strong> list.
   
   <li>Templates</li>
   <ul>
-    <li>Change a logic in <em>wallets_with_txs_list</em> to make sure that chains logos display correctly ✅ [dev]</li>
-    <li>Change some css to make sure that <em>accordions</em> and <em>tabs</em> work correctly ✅ [dev]</li>
+    <li>Change a logic in <em>wallets_with_txs_list</em> to make sure that chains logos display correctly ✅ </li>
+    <li>Change some css to make sure that <em>accordions</em> and <em>tabs</em> work correctly ✅ </li>
     <li>Improve css styles for all existing pages</li>
   </ul>
  

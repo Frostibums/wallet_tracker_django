@@ -12,7 +12,7 @@ For now this file is gonna be a <strong>TODO</strong> list.
 <ul style="paddling-bottom: 4px;">
   <li>Functionality</li>
   <ul>
-    <li>Deploy <strong>Celery</strong> to update wallets transactions every <em>t</em> seconds</li>
+    <li>Deploy <strong>Celery</strong> to update wallets transactions every <em>t</em> seconds ✅ [dev]</li>
     <li>Add <em>subscription on notifications</em> about new transactions</li>
     <ul>
       <li>Create a <strong>Telegram bot</strong></li>

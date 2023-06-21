@@ -27,6 +27,6 @@ class WalletAddForm(forms.ModelForm):
             self.add_error('wallet_address', ValidationError('Wallet with such address doesn\'t exist.'))
 
         if not self.has_no_duplicates():
-            self.add_error('wallet_address', ValidationError('Wallet with such address already added.'))
+            self.add_error('wallet_address', ValidationError('Wallet with such address is already added.'))
 
         return self.cleaned_data.get('wallet_address')

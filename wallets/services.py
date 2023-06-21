@@ -5,7 +5,10 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, get_list_or_404
 
 from wallets.models import Wallet, Transaction
-from wallets.parser import get_new_txs
+
+
+def get_all_wallets_addresses():
+    return list(Wallet.objects.all().values_list('wallet_address', flat=True))
 
 
 def get_wallet_blockchains(wallet):
@@ -39,17 +42,6 @@ def get_wallet_owner(wallet_address):
     return wallet.owner
 
 
-def update_wallet_txs(wallet, amount=10):
-    wallet_txs = {}
-    for blockchain in get_wallet_blockchains(wallet):
-        start_block = get_last_block(wallet, blockchain)
-        wallet_txs[blockchain] = get_new_txs(wallet, blockchain, amount, start_block)
-        if wallet_txs.get(blockchain, False):
-            for tx in wallet_txs.get(blockchain):
-                if int(tx.get('value')):
-                    add_tx_to_wallet(wallet, tx, blockchain)
-
-
 def get_last_block(wallet, blockchain):
     try:
         return Transaction.objects.filter(wallet=wallet, blockchain=blockchain).aggregate(Max('block_number'))
@@ -76,7 +68,7 @@ def add_tx_to_wallet(wallet, tx, blockchain):
 def get_wallet_txs(wallet, amount=5):
     txs = {}
     for blockchain in get_wallet_blockchains(wallet):
-        txs[blockchain] = Transaction.objects.filter(wallet=wallet, blockchain=blockchain)[:amount]
+        txs[blockchain] = Transaction.objects.filter(wallet=wallet, blockchain=blockchain).order_by('-time_stamp')[:amount]
     return {
         'wallet': wallet,
         'txs': txs,

@@ -44,8 +44,7 @@ def add_wallet(request):
 @login_required
 def remove_wallet(request, wallet_address):
     if request.user != get_wallet_owner(wallet_address):
-        messages.error(request, f'Данный кошелек не принадлежит вам! {wallet_address}')
-        return redirect('wallets_list')
+        raise PermissionError(f'{request.user} | remove_wallet | {wallet_address}')
     remove_wallet_from_user(wallet_address)
     messages.success(request, 'Кошелек удален!')
     return redirect('wallets_list')

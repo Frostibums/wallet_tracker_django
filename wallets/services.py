@@ -20,7 +20,7 @@ def get_wallet(wallet_address):
         wallet = get_object_or_404(Wallet, wallet_address=wallet_address)
         return wallet
     except Http404:
-        raise ValueError(f'get_wallet {wallet_address}')
+        return False
 
 
 def get_user_wallets(user):
@@ -39,6 +39,8 @@ def remove_wallet_from_user(wallet_address):
 
 def get_wallet_owner(wallet_address):
     wallet = get_wallet(wallet_address)
+    if not wallet:
+        return ''
     return wallet.owner
 
 

@@ -13,11 +13,6 @@ For now this file is gonna be a <strong>TODO</strong> list.
   <li>Functionality</li>
   <ul>
     <li>Deploy <strong>Celery</strong> to update wallets transactions every <em>t</em> seconds ✅ [dev]</li>
-    <li>Add <em>subscription on notifications</em> about new transactions</li>
-    <ul>
-      <li>Create a <strong>Telegram bot</strong></li>
-      <li>Make bot logic</li>
-    </ul>
   </ul>
   
   <li>Templates</li>

@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
 
 from users import views as users_views
 from wallets import views as wallets_views
@@ -26,5 +27,6 @@ urlpatterns = [
     path('register/', users_views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('wallets/', include('wallets.urls'))
+    path('wallets/', include('wallets.urls')),
+    path('exception/', TemplateView.as_view(template_name='exception.html'), name='exception')
 ]

@@ -2,9 +2,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from .services import get_user_wallets, remove_wallet_from_user, get_wallet_owner, get_wallet_txs
-from .tasks import update_wallet_txs
 from wallets.forms import WalletAddForm
+
+from .services import get_user_wallets, get_wallet_owner, get_wallet_txs, remove_wallet_from_user
+from .tasks import update_wallet_txs
 
 
 @login_required
@@ -42,11 +43,11 @@ def add_wallet(request):
 
 @login_required
 def remove_wallet(request, wallet_address):
-    if request.user == get_wallet_owner(wallet_address):
-        remove_wallet_from_user(wallet_address)
-        messages.success(request, 'Кошелек удален!')
+    if request.user != get_wallet_owner(wallet_address):
+        messages.error(request, f'Данный кошелек не принадлежит вам! {wallet_address}')
         return redirect('wallets_list')
-    messages.error(request, f'Данный кошелек не принадлежит вам! {wallet_address}')
+    remove_wallet_from_user(wallet_address)
+    messages.success(request, 'Кошелек удален!')
     return redirect('wallets_list')
 
 

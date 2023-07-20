@@ -2,9 +2,9 @@ from datetime import datetime
 
 from django.db.models import Max
 from django.http import Http404
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
 
-from wallets.models import Wallet, Transaction
+from wallets.models import Transaction, Wallet
 
 
 def get_all_wallets_addresses():
@@ -20,7 +20,7 @@ def get_wallet(wallet_address):
         wallet = get_object_or_404(Wallet, wallet_address=wallet_address)
         return wallet
     except Http404:
-        return False
+        raise ValueError(f'get_wallet {wallet_address}')
 
 
 def get_user_wallets(user):
@@ -60,7 +60,7 @@ def add_tx_to_wallet(wallet, tx, blockchain):
         token_name=tx.get('tokenName', ''),
         token_symbol=tx.get('tokenSymbol', blockchain),
         value=str(round(int(tx.get('value')) / 10 ** 18, 2)),
-        time_stamp=datetime.fromtimestamp(int(tx.get('timeStamp')))
+        time_stamp=datetime.fromtimestamp(int(tx.get('timeStamp'))),
     )
     return created
 

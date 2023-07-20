@@ -24,9 +24,8 @@ For now this file is gonna be a <strong>TODO</strong> list.
  
   <li>Exceptions</li>
   <ul>
-    <li>Understand <em>middlewares</em></li>
-    <li>Make <em>exceptions.py</em></li>
-    <li>Add <em>try-except</em> blocks</li>
+    <li>Understand <em>middlewares</em> ✅</li>
+    <li>Create middleware to cacth exceptions ✅ [dev]</li>
   </ul>
   
   <li>Write comments</li>

@@ -1,8 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
-# Create your models here.
 class Blockchain(models.Model):
     title = models.CharField(
         'Blockchain',
@@ -27,6 +26,7 @@ class Wallet(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Wallet owner',
         related_name='wallet_owner',
+        default=0,
     )
     blockchains = models.ManyToManyField(Blockchain, related_name='blockchain')
 

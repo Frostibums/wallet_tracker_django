@@ -10,6 +10,7 @@ from .tasks import update_wallet_txs
 
 @login_required
 def wallets_with_txs_list(request):
+    """View for displaying a list of user wallets along with their recent transactions."""
     all_txs = []
     wallets = get_user_wallets(request.user)
     for wallet in wallets:
@@ -23,6 +24,7 @@ def wallets_with_txs_list(request):
 
 @login_required
 def add_wallet(request):
+    """View for adding a new wallet to the user's account."""
     if request.method == 'POST':
         wallet_add_form = WalletAddForm(request.POST)
         if all([wallet_add_form.is_valid(),
@@ -42,7 +44,8 @@ def add_wallet(request):
 
 
 @login_required
-def remove_wallet(request, wallet_address):
+def remove_wallet(request, wallet_address: str):
+    """View for removing a wallet from the user's account."""
     if request.user != get_wallet_owner(wallet_address):
         raise PermissionError(f'{request.user} | remove_wallet | {wallet_address}')
     remove_wallet_from_user(wallet_address)
@@ -52,5 +55,6 @@ def remove_wallet(request, wallet_address):
 
 @login_required
 def wallets_list(request):
+    """View for displaying a list of user wallets."""
     wallets = get_user_wallets(request.user)
     return render(request, 'wallets/list.html', {'wallets': wallets})

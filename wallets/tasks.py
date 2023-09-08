@@ -5,7 +5,8 @@ from wallets.services import get_wallet_blockchains, get_last_block, add_tx_to_w
 
 
 @app.task
-def update_wallet_txs(wallet_address, amount=10):
+def update_wallet_txs(wallet_address: str, amount: int = 10) -> bool:
+    """Task to update wallet transactions."""
     wallet_txs = {}
     wallet = get_wallet(wallet_address)
     for blockchain in get_wallet_blockchains(wallet):
@@ -19,7 +20,8 @@ def update_wallet_txs(wallet_address, amount=10):
 
 
 @app.task
-def update_all_wallets_txs():
+def update_all_wallets_txs() -> bool:
+    """Task to update transactions for all wallets."""
     wallets = get_all_wallets_addresses()
     for wallet in wallets:
         update_wallet_txs(wallet)

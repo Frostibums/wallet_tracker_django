@@ -31,6 +31,7 @@ docker run -d -p 6379:6379 redis
 ```
 5. Apply migrations:
 ```sh
+python manage.py makemigrations
 python manage.py migrate
 ```
 6. Start Celery for task processing:

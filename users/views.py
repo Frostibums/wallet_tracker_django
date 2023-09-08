@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
 from users.forms import UserRegisterForm
 
 
-# Create your views here.
 def register(request):
     if request.method == 'POST':
         register_form = UserRegisterForm(request.POST)
@@ -17,9 +16,10 @@ def register(request):
         register_form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': register_form})
 
+
 def login(request):
     return render(request, 'users/login.html')
 
+
 def logout(request):
     return render(request, 'users/logout.html', {'message': f'logged out'})
-

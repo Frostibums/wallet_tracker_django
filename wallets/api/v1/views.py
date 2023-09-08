@@ -13,6 +13,7 @@ from ...tasks import update_wallet_txs
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_wallets(request):
+    """Retrieve a list of wallets owned by the authenticated user."""
     user = request.user
     wallets = Wallet.objects.filter(owner=user)
     serializer = WalletSerializer(wallets, many=True)
@@ -22,6 +23,7 @@ def get_user_wallets(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_wallet(request):
+    """Add a new wallet for the authenticated user."""
     data = request.data
     wallet_address = data.get('wallet_address')
     blockchains = data.get('blockchains')
@@ -49,6 +51,7 @@ def add_wallet(request):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def remove_wallet(request, wallet_address):
+    """Remove a wallet owned by the authenticated user."""
     if request.user != get_wallet_owner(wallet_address):
         return Response(status=status.HTTP_403_FORBIDDEN)
     wallet = Wallet.objects.filter(wallet_address=wallet_address)

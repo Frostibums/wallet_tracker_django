@@ -2,10 +2,13 @@ from datetime import datetime
 
 from django.db.models import Max
 from django.http import Http404
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
 
-from wallets.models import Wallet, Transaction
-from wallets.parser import get_new_txs
+from wallets.models import Transaction, Wallet
+
+
+def get_all_wallets_addresses():
+    return list(Wallet.objects.all().values_list('wallet_address', flat=True))
 
 
 def get_wallet_blockchains(wallet):
@@ -36,18 +39,9 @@ def remove_wallet_from_user(wallet_address):
 
 def get_wallet_owner(wallet_address):
     wallet = get_wallet(wallet_address)
+    if not wallet:
+        return ''
     return wallet.owner
-
-
-def update_wallet_txs(wallet, amount=10):
-    wallet_txs = {}
-    for blockchain in get_wallet_blockchains(wallet):
-        start_block = get_last_block(wallet, blockchain)
-        wallet_txs[blockchain] = get_new_txs(wallet, blockchain, amount, start_block)
-        if wallet_txs.get(blockchain, False):
-            for tx in wallet_txs.get(blockchain):
-                if int(tx.get('value')):
-                    add_tx_to_wallet(wallet, tx, blockchain)
 
 
 def get_last_block(wallet, blockchain):
@@ -68,7 +62,7 @@ def add_tx_to_wallet(wallet, tx, blockchain):
         token_name=tx.get('tokenName', ''),
         token_symbol=tx.get('tokenSymbol', blockchain),
         value=str(round(int(tx.get('value')) / 10 ** 18, 2)),
-        time_stamp=datetime.fromtimestamp(int(tx.get('timeStamp')))
+        time_stamp=datetime.fromtimestamp(int(tx.get('timeStamp'))),
     )
     return created
 
@@ -76,7 +70,7 @@ def add_tx_to_wallet(wallet, tx, blockchain):
 def get_wallet_txs(wallet, amount=5):
     txs = {}
     for blockchain in get_wallet_blockchains(wallet):
-        txs[blockchain] = Transaction.objects.filter(wallet=wallet, blockchain=blockchain)[:amount]
+        txs[blockchain] = Transaction.objects.filter(wallet=wallet, blockchain=blockchain).order_by('-time_stamp')[:amount]
     return {
         'wallet': wallet,
         'txs': txs,

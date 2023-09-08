@@ -1,9 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
-from .services import get_user_wallets, remove_wallet_from_user, get_wallet_owner, update_wallet_txs, get_wallet_txs
 from wallets.forms import WalletAddForm
+
+from .services import get_user_wallets, get_wallet_owner, get_wallet_txs, remove_wallet_from_user
+from .tasks import update_wallet_txs
 
 
 @login_required
@@ -11,7 +13,6 @@ def wallets_with_txs_list(request):
     all_txs = []
     wallets = get_user_wallets(request.user)
     for wallet in wallets:
-        #update_wallet_txs(wallet)
         wallet_txs = get_wallet_txs(wallet, 5)
         all_txs.append(wallet_txs)
     context = {
@@ -33,7 +34,7 @@ def add_wallet(request):
             blockchain = request.POST.getlist('blockchains')
             new_wallet.blockchains.add(*blockchain)
             messages.success(request, f'Добавлен кошелек {new_wallet}!')
-            update_wallet_txs(new_wallet)
+            update_wallet_txs.delay(new_wallet.wallet_address)
             return redirect('wallets_list')
     else:
         wallet_add_form = WalletAddForm()
@@ -42,11 +43,10 @@ def add_wallet(request):
 
 @login_required
 def remove_wallet(request, wallet_address):
-    if request.user == get_wallet_owner(wallet_address):
-        remove_wallet_from_user(wallet_address)
-        messages.success(request, f'Кошелек удален!')
-        return redirect('wallets_list')
-    messages.error(request, f'Данный кошелек не пренадлежит вам! {wallet_address}')
+    if request.user != get_wallet_owner(wallet_address):
+        raise PermissionError(f'{request.user} | remove_wallet | {wallet_address}')
+    remove_wallet_from_user(wallet_address)
+    messages.success(request, 'Кошелек удален!')
     return redirect('wallets_list')
 
 

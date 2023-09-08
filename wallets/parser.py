@@ -1,6 +1,7 @@
-from wallet_tracker.settings import SCANNERS_API_KEYS
-import requests
 import cloudscraper
+import requests
+
+from wallet_tracker.settings import SCANNERS_API_KEYS
 
 
 def get_new_txs(wallet, blockchain, offset=5, start_block=0):
@@ -27,8 +28,8 @@ def get_new_txs(wallet, blockchain, offset=5, start_block=0):
                 data['action'] = action
                 txs = requests.get(scanner_api.get(blockchain.title), params=data).json()
                 if txs.get('message') == 'OK':
-                    for tx in txs.get('result'):
-                        new_txs.append(tx)
+                    new_txs.extend(txs.get('result'))
+
         case _:
             print(blockchain.title)
     return new_txs
@@ -58,4 +59,3 @@ def check_if_bsc_wallet_exists(wallet_address):
 def get_page(link):
     scraper = cloudscraper.CloudScraper()
     return scraper.get(link).text
-

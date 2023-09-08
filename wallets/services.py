@@ -24,11 +24,8 @@ def get_wallet(wallet_address):
 
 
 def get_user_wallets(user):
-    try:
-        wallets = get_list_or_404(Wallet, owner=user)
-        return wallets
-    except Http404:
-        return []
+    wallets = Wallet.objects.filter(owner=user)
+    return wallets
 
 
 def remove_wallet_from_user(wallet_address):

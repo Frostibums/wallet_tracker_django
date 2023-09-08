@@ -27,6 +27,7 @@ class Wallet(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Wallet owner',
         related_name='wallet_owner',
+        default=0,
     )
     blockchains = models.ManyToManyField(Blockchain, related_name='blockchain')
 
